@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Rental from '../build/contracts/Rental.json'
 import getWeb3 from './utils/getWeb3'
 
 import './css/pure-min.css'
@@ -66,9 +67,27 @@ class App extends Component {
 
   instantiateContract() {
     // add your code to handle initial page load here
-    console.log('instantiateContract fired')
+    const contract = require('truffle-contract')
+    const rental = contract(Rental)
+    rental.setProvider(this.state.web3.currentProvider)
+    let rentalInstance
+    this.state.web3.eth.getAccounts((error, accounts) => {
+        rental.deployed().then((instance) => {
+            rentalInstance = instance
+            return rentalInstance.getRentals.call()
+        }).then((result) => {
+            console.log('Rental status on init!')
+            console.log(result)
+            this.setState({
+                renters: result
+            })
+        }).catch((err) => {
+            console.log('Error listing rentals.')
+            console.log(err)
+        })
+    })
   }
-
+ 
   handleRentMe(id) {
       // add code to rent vehicle here
       console.log('handleRentMe fired')
