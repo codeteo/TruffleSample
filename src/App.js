@@ -90,7 +90,26 @@ class App extends Component {
  
   handleRentMe(id) {
       // add code to rent vehicle here
-      console.log('handleRentMe fired')
+      let rentalInstance
+      const contract = require('truffle-contract')
+      const rental = contract(Rental)
+      rental.setProvider(this.state.web3.currentProvider)
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          rental.deployed().then((instance) => {
+              rentalInstance = instance
+              return rentalInstance.rent(id, {
+                  from: accounts[0],
+                  value: this.state.web3.toWei(rentals[id].price, 'ether'),
+                  gas: 1000000,
+                  gasPrice: 2000000000
+              })
+          }).then((result) => {
+              console.log(`Successfully rented ${rentalInstance}`)
+          }).catch((err) => {
+              console.log('Error renting car')
+              console.log(err)
+          })
+      })
   }
 
   handleGetRentals() {
