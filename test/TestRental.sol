@@ -37,7 +37,7 @@ contract TestRental {
     function testContractBalance() public {
         uint expected = 0;
 
-        Assert.equal(rental.getBalance(), expected, "Contract should have a zero balance")
+        Assert.equal(rental.getBalance(), expected, "Contract should have a zero balance");
     }
 
 }
