@@ -149,6 +149,21 @@ class App extends Component {
       })
   }
 
+  withdrawFunds() {
+      const contract = require('truffle-contract')
+      const rental = contract(Rental)
+      rental.setProvider(this.state.web3.currentProvider)    
+      let rentalInstance
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          rentals.deployed().then((instance) => {
+            rentalInstance = instance
+            return rentalInstance.payday()
+          }).then((result) => {
+              console.log('Contract payment initiated.')
+          })
+      })
+    }
+
   render() {
     console.log('Rendering')
     return (
@@ -157,6 +172,13 @@ class App extends Component {
             <img className="pure-menu-heading" src={require('./images/caster_logo.png')} alt="Caster.io" width="32" />
             <a href="#" className="pure-menu-heading pure-menu-link">Caster.io Blockchain Track</a>
         </nav>
+        <div>
+          <button 
+              onClick={this.withdrawFunds}
+              className="pure-button pure-button-primary">
+              Withdraw Funds
+          </button>
+        </div>
 
         <main className="container">
           <div className="pure-g">
