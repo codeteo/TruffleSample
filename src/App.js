@@ -105,6 +105,7 @@ class App extends Component {
               })
           }).then((result) => {
               console.log(`Successfully rented ${rentalInstance}`)
+              this.getContractBalance()
           }).catch((err) => {
               console.log('Error renting car')
               console.log(err)
@@ -132,7 +133,20 @@ class App extends Component {
 
   getContractBalance() {
       // add code to get Ether value of contract here
-      console.log('getContractBalance fired')
+      let rentalContract
+      const contract = require('truffle-contract')
+      const rental = contract(Rental)
+      rental.setProvider(this.state.web3.currentProvider)
+
+      rental.deployed().then((instance) => {
+          rentalContract = instance
+          return rentalContract.getBalance()
+      }).then((result) => {
+          console.log(this.state.web3.fromWei(result.toNumber(), 'ether'))
+      }).catch((err) => {
+          console.log('Error getting contract balance!')
+          console.log(err)
+      })
   }
 
   render() {
