@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.0;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
@@ -33,4 +33,11 @@ contract TestRental {
 
         Assert.equal(rentals[1], expected, "Renter of vehicle 1 should be recorded.");
     }
+
+    function testContractBalance() public {
+        uint expected = 0;
+
+        Assert.equal(rental.getBalance(), expected, "Contract should have a zero balance")
+    }
+
 }
